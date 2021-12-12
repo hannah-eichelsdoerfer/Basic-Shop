@@ -1,11 +1,11 @@
-import { Router } from "express";
-import { sign } from "jsonwebtoken";
-import { hash } from "bcryptjs";
+const Router = require("express").Router;
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 
 const router = Router();
 
 const createToken = () => {
-  return sign({}, "secret", { expiresIn: "1h" });
+  return jwt.sign({}, "secret", { expiresIn: "1h" });
 };
 
 router.post("/login", (req, res, next) => {
@@ -24,7 +24,8 @@ router.post("/signup", (req, res, next) => {
   const email = req.body.email;
   const pw = req.body.password;
   // Hash password before storing it in database => Encryption at Rest
-  hash(pw, 12)
+  bcrypt
+    .hash(pw, 12)
     .then((hashedPW) => {
       // Store hashedPW in database
       console.log(hashedPW);
@@ -40,4 +41,4 @@ router.post("/signup", (req, res, next) => {
   // Add user to database
 });
 
-export default router;
+module.exports = router;

@@ -2,32 +2,9 @@ const path = require("path");
 
 const express = require("express");
 const bodyParser = require("body-parser");
-
-// const { MongoClient } = require('mongodb');
-// const uri =
-//   "mongodb+srv://hannaheich:sZWQpDY5McoI23rU@cluster0.duw7h.mongodb.net/shop?retryWrites=true&w=majority"; // shop will be created on the fly
-// const client = new MongoClient(uri, {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-// });
-// client.connect((err) => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
-
 const mongodb = require("mongodb").MongoClient;
-mongodb
-  .connect(
-    "mongodb+srv://hannaheich:lTwwqUGLexY2amzT@cluster0.duw7h.mongodb.net/shop?retryWrites=true&w=majority"
-  ) // use promise or callback
-  .then((client) => {
-    console.log("Connected!");
-    client.close();
-  })
-  .catch((err) => console.log(err));
 
-const productRoutes = require("./routes/products").default.default;
+const productRoutes = require("./routes/products");
 const authRoutes = require("./routes/auth");
 
 const app = express();

@@ -83,30 +83,33 @@ router.post("", (req, res, next) => {
   const newProduct = {
     name: req.body.name,
     description: req.body.description,
-    price: Decimal128.fromString(req.body.price.toString()), // stores this as 128bit decimal in MongoDB instead os tring
+    price: Decimal128.fromString(req.body.price.toString()), // store this as 128bit decimal in MongoDB
     image: req.body.image,
   };
-
   MongoClient.connect(
     "mongodb+srv://hannaheich:lTwwqUGLexY2amzT@cluster0.duw7h.mongodb.net/shop?retryWrites=true&w=majority"
-  ) // use promise or callback
+  )
     .then((client) => {
-      client.db
-        .collection("product") // creates collection on the fly in this case
+      client
+        .db()
+        .collection("products")
         .insertOne(newProduct)
         .then((result) => {
           console.log(result);
           client.close();
+          res
+            .status(201)
+            .json({ message: "Product added", productId: result.insertedId });
         })
         .catch((err) => {
           console.log(err);
           client.close();
+          res.status(500).json({ message: "An error occurred." });
         });
-      client.close();
     })
-    .catch((err) => console.log(err));
-
-  res.status(201).json({ message: "Product added", productId: "DUMMY" });
+    .catch((err) => {
+      console.log(err);
+    });
 });
 
 // Edit existing product
